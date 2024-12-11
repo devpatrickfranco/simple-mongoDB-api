@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+@app.route("/")
+def get():
+    return 'Hello world'
+
 @app.route("/receive_data", methods=["POST"])
 def receive_data():
     """
