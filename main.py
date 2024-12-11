@@ -41,5 +41,19 @@ def receive_data():
         return jsonify({"error": "Erro interno"}), 500
 
 
+@app.route("/clear_data", methods=["POST"])
+def clear_data():
+    """
+    Endpoint para limpar as mensagens.
+    """
+    try:
+        messages.clear()  # Limpa a lista de mensagens
+        print("Mensagens apagadas!")
+        return jsonify({"status": "limpeza concluída"}), 200
+    except Exception as e:
+        print(f"Erro ao limpar dados: {e}")
+        return jsonify({"error": "Erro interno"}), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
