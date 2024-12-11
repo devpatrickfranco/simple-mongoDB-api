@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensagens Recebidas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    table th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
-        <h1>hello world</h1>
+  <h1>Mensagens Recebidas da OpenAI</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Mensagem</th>
+        <th>ID do Usuário</th>
+      </tr>
+    </thead>
+    <tbody id="messages">
+      {% for message in messages %}
+        <tr>
+          <td>{{ message['message'] }}</td>
+          <td>{{ message['user_id'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </body>
 </html>
