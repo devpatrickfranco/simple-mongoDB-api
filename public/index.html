@@ -4,47 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fastify + TypeScript</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 0;
-    background-color: #f9f9f9;
-  }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
 
-  h1 {
-    text-align: center;
-    color: #333;
-  }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: #fff;
-  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+    }
 
-  table, th, td {
-    border: 1px solid #ddd;
-  }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
 
-  th, td {
-    padding: 12px;
-    text-align: left;
-  }
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
 
-  th {
-    background-color: #f4f4f4;
-  }
+    th {
+      background-color: #f4f4f4;
+    }
 
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
-  tr:hover {
-    background-color: #f1f1f1;
-  }
-</style>
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
 </head>
 <body>
 <h1>Messages</h1>
@@ -63,10 +63,11 @@
 </table>
 
 <script>
-  // Faz uma requisição GET à rota /messages para buscar os dados
+  // Faz uma requisição GET à rota /list-messages para buscar os dados
   async function fetchMessages() {
     try {
-      const response = await fetch('/messages');
+      // A URL da API será /list-messages
+      const response = await fetch('/list');
       if (!response.ok) {
         throw new Error(`Erro: ${response.status}`);
       }
@@ -74,18 +75,21 @@
       const messages = await response.json();
       const tableBody = document.getElementById('messageTable');
 
-      // Limpa o corpo da tabela
+      // Limpa o corpo da tabela antes de inserir novos dados
       tableBody.innerHTML = '';
 
       // Preenche a tabela com os dados recebidos
       messages.forEach(message => {
         const row = document.createElement('tr');
 
+        // Formata a data para algo mais legível
+        const createdAt = new Date(message.created_at).toLocaleString();
+
         row.innerHTML = `
-          <td>${message.id}</td>
+          <td>${message._id}</td>
           <td>${message.user_id}</td>
           <td>${message.message}</td>
-          <td>${message.created_at}</td>
+          <td>${createdAt}</td>
         `;
 
         tableBody.appendChild(row);
@@ -96,7 +100,7 @@
   }
 
   // Chama a função ao carregar a página
-  fetchMessages();
+  window.onload = fetchMessages;
 </script>
 </body>
 </html>
