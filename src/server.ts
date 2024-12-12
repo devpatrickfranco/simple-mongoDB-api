@@ -3,6 +3,7 @@ import * as path from 'path';
 import fastifyStatic from '@fastify/static';
 import userRoutes from './htpp/controllers/post';
 import process from 'process'; 
+import { env } from './env';
 
 export const app = Fastify();
 
@@ -22,8 +23,10 @@ app.get('/health', async (request, reply) => {
 // Iniciar servidor na porta 5000
 const startServer = async () => {
   try {
-    await app.listen({ port: 5000 });
-    console.log('Servidor Fastify rodando em http://localhost:5000');
+    // Usando process.env.PORT para pegar a porta definida pelo Render
+    const port = env.PORT || 5000;
+    await app.listen({ port });
+    console.log(`HTTP Server running in ${port}`);
   } catch (error) {
     console.error('Erro ao iniciar o servidor', error);
     process.exit(1);

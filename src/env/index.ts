@@ -2,7 +2,8 @@ import 'dotenv/config'
 import { z } from 'zod'
 
 const envSchema = z.object({
-    MONGO_URI: z.string()
+    MONGO_URI: z.string(),
+    PORT: z.number()
     
 })
 
