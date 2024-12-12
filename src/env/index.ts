@@ -3,8 +3,7 @@ import { z } from 'zod'
 
 const envSchema = z.object({
     MONGO_URI: z.string(),
-    PORT: z.number()
-    
+    PORT: z.coerce.number().default(3333)
 })
 
 const _env = envSchema.safeParse(process.env)
