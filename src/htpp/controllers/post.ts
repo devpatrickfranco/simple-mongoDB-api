@@ -1,7 +1,10 @@
 import { FastifyPluginAsync } from 'fastify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://patrickrfranco:Portal2024@cluster0.celfn.mongodb.net/test?retryWrites=true&w=majority'; // Atualize com sua URI do MongoDB
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+  throw new Error('A variável de ambiente MONGO_URI não foi configurada!');
+}
 const dbName = 'testDB'; // Nome do banco de dados
 const collectionName = 'messages'; // Nome da coleção
 
