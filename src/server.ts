@@ -25,7 +25,7 @@ const startServer = async () => {
   try {
     // Usando process.env.PORT para pegar a porta definida pelo Render
     const port = env.PORT || 5000;
-    await app.listen({ port });
+    await app.listen({ port, host: '0.0.0.0' });
     console.log(`HTTP Server running in ${port}`);
   } catch (error) {
     console.error('Erro ao iniciar o servidor', error);
