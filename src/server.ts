@@ -2,7 +2,6 @@ import Fastify from 'fastify';
 import * as path from 'path';
 import fastifyStatic from '@fastify/static';
 import userRoutes from './htpp/controllers/post';
-import getMessages from './htpp/controllers/get';
 
 export const app = Fastify();
 
@@ -12,7 +11,7 @@ app.register(fastifyStatic, {
   prefix: '/', // Todos os caminhos servirão index.html
 });
 
-app.register(userRoutes, getMessages)
+app.register(userRoutes)
 
 // Testando rota principal para confirmar que o servidor funciona
 app.get('/health', async (request, reply) => {

@@ -1,20 +1,26 @@
 import { FastifyPluginAsync } from 'fastify';
-import sqlite3 from 'better-sqlite3';
+import { MongoClient, Db, Collection } from 'mongodb';
 
-// Inicializa o banco SQLite
-export const db = new sqlite3('messages.db');
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://patrickrfranco:Portal2024@cluster0.celfn.mongodb.net/test?retryWrites=true&w=majority'; // Atualize com sua URI do MongoDB
+const dbName = 'testDB'; // Nome do banco de dados
+const collectionName = 'messages'; // Nome da coleção
 
-// Cria a tabela se ela não existir
-db.exec(`
-  CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    message TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+// Inicializa a conexão com o MongoDB
+let db: Db;
+let messagesCollection: Collection;
+
+async function connectToDatabase() {
+  const client = new MongoClient(mongoUri);
+  await client.connect();
+  db = client.db(dbName);
+  messagesCollection = db.collection(collectionName);
+  console.log('Conectado ao MongoDB');
+}
 
 const userRoutes: FastifyPluginAsync = async (app) => {
+  // Conecta ao banco antes de registrar as rotas
+  await connectToDatabase();
+
   // Rota POST para capturar user_id e mensagem
   app.post('/receive-message', async (request, reply) => {
     try {
@@ -24,14 +30,9 @@ const userRoutes: FastifyPluginAsync = async (app) => {
         return reply.status(400).send({ error: 'Parâmetros inválidos. Informe user_id e message.' });
       }
 
-      // Insere a mensagem no banco de dados
-      const insertStatement = db.prepare(`
-        INSERT INTO messages (user_id, message) 
-        VALUES (?, ?)
-      `);
-      insertStatement.run(user_id, message);
-
-      console.log(`Mensagem salva no banco do usuário ${user_id}: ${message}`);
+      // Salva a mensagem no MongoDB
+      const result = await messagesCollection.insertOne({ user_id, message, created_at: new Date() });
+      console.log(`Mensagem salva no banco MongoDB: ${result.insertedId}`);
 
       return reply.status(200).send({ status: 'mensagem recebida e salva com sucesso' });
     } catch (error) {
@@ -39,8 +40,17 @@ const userRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(500).send({ error: 'Erro interno no servidor' });
     }
   });
+
+  // Rota GET para listar mensagens
+  app.get('/messages', async (request, reply) => {
+    try {
+      const messages = await messagesCollection.find({}).sort({ created_at: -1 }).toArray();
+      return reply.status(200).send(messages);
+    } catch (error) {
+      console.error('Erro ao buscar mensagens:', error);
+      return reply.status(500).send({ error: 'Erro interno no servidor' });
+    }
+  });
 };
 
 export default userRoutes;
-
-
