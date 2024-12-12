@@ -4,9 +4,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fastify + TypeScript</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+  }
+
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+</style>
 </head>
 <body>
-  <h1>Servidor Fastify com TypeScript</h1>
-  <p>Conectado com sucesso!</p>
+<h1>Messages</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User ID</th>
+      <th>Message</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody id="messageTable">
+    <!-- Os dados serão inseridos aqui pelo JavaScript -->
+  </tbody>
+</table>
+
+<script>
+  // Faz uma requisição GET à rota /messages para buscar os dados
+  async function fetchMessages() {
+    try {
+      const response = await fetch('/messages');
+      if (!response.ok) {
+        throw new Error(`Erro: ${response.status}`);
+      }
+
+      const messages = await response.json();
+      const tableBody = document.getElementById('messageTable');
+
+      // Limpa o corpo da tabela
+      tableBody.innerHTML = '';
+
+      // Preenche a tabela com os dados recebidos
+      messages.forEach(message => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${message.id}</td>
+          <td>${message.user_id}</td>
+          <td>${message.message}</td>
+          <td>${message.created_at}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    } catch (error) {
+      console.error('Erro ao buscar mensagens:', error);
+    }
+  }
+
+  // Chama a função ao carregar a página
+  fetchMessages();
+</script>
 </body>
 </html>
