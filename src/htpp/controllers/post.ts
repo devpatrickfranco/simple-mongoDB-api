@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify';
 import { MongoClient, Db, Collection } from 'mongodb';
-
-const mongoUri = process.env.MONGO_URI!;
+import { env } from '../../env';
+const mongoUri = env.MONGO_URI;
 if (!mongoUri) {
   throw new Error('A variável de ambiente MONGO_URI não foi configurada!');
 }

@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import * as path from 'path';
 import fastifyStatic from '@fastify/static';
 import userRoutes from './htpp/controllers/post';
+import process from 'process'; 
 
 export const app = Fastify();
 
